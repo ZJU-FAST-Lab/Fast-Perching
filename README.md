@@ -7,7 +7,7 @@
 
 **Paper**: [Real-Time Trajectory Planning for Aerial Perching](https://arxiv.org/abs/2203.01061), Jialin Ji, Tiankai Yang, Chao Xu, Fei Gao, Accepted in IEEE/RSJ International Conference on Intelligent Robots and Systems (__IROS 2022__).
 
-**Video Links**: [youtube]() or [bilibili](https://www.bilibili.com/video/BV14q4y147uz)
+**Video Links**: [bilibili](https://www.bilibili.com/video/BV14q4y147uz)
 <a href="https://www.bilibili.com/video/BV14q4y147uz" target="blank">
   <p align="center">
     <img src="figs/cover.png" width="500"/>
