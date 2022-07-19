@@ -1,0 +1,87 @@
+<launch>
+
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find planning)/config/rviz_sim.rviz">
+  </node>
+
+  <group ns="drone0">
+
+    <node pkg="odom_visualization" name="odom_visualization" type="odom_visualization" output="screen">
+      <remap from="~odom" to="odom" />
+      <param name="robot_scale" value="1.0"/>
+    </node>
+    <node pkg="odom_visualization" name="odom_visualization_plate" type="odom_visualization_plate" output="screen">
+      <remap from="~odom" to="planning/target_odom" />
+      <param name="height" value="1.2"/>
+      <param name="width" value="1.6"/>
+      <param name="platform_r" value="1.0"/>
+    </node>
+
+    <node pkg="nodelet" type="nodelet" name="manager" args="manager" output="screen">
+      <param name="num_worker_threads" value="16"/>
+    </node>
+
+    <node pkg="nodelet" type="nodelet" name="planning" args="load planning/Nodelet manager" output="screen">
+      <remap from="~odom" to="odom"/>
+      <remap from="~heartbeat" to="heartbeat"/>
+      <remap from="~trajectory" to="trajectory"/>
+      <remap from="~replanState" to="replanState"/>
+      <remap from="~triger" to="/triger"/>
+      <remap from="~land_triger" to="/land_triger"/>
+      <remap from="~target" to="/target/odom"/>
+
+      <param name="plan_hz" value="5"/>
+
+      <param name="K" value="16"/>
+      <param name="vmax" value="6.0"/>
+      <param name="amax" value="6.0"/>
+
+      <param name="thrust_max" value="17.0"/>
+      <param name="thrust_min" value="5.0"/>
+      <param name="omega_max" value="3.0"/>
+      <param name="omega_yaw_max" value="0.5"/>
+
+      <param name="robot_l" value="0.02"/>
+      <param name="robot_r" value="0.13"/>
+      <param name="platform_r" value="1.0"/>
+      <param name="v_plus" value="0.3"/>
+
+      <param name="rhoT" value="100000.0"/>
+      <param name="rhoP" value="10000000.0"/>
+      <param name="rhoV" value="1000.0"/>
+      <param name="rhoA" value="1000.0"/>
+      <param name="rhoVt" value="100000.0"/>
+      <param name="rhoThrust" value="10000.0"/>
+      <param name="rhoOmega" value="100000.0"/>
+      <param name="rhoPerchingCollision" value="1000000.0"/>
+
+      <param name="perching_px" value="0.5"/>
+      <param name="perching_py" value="0.0"/>
+      <!-- <param name="perching_pz" value="1.0"/> -->
+      <!-- <param name="perching_pz" value="1.5"/> -->
+      <param name="perching_pz" value="2.0"/>
+      <param name="perching_vx" value="2.0"/>
+      <param name="perching_vy" value="0.0"/>
+      <param name="perching_vz" value="0.0"/>
+
+      <param name="perching_axis_x" value="0.0"/>
+      <param name="perching_axis_y" value="1.0"/>
+      <param name="perching_axis_z" value="0.0"/>
+      <!-- <param name="perching_theta" value="-0.0"/> -->
+      <!-- <param name="perching_theta" value="0.5"/> -->
+      <!-- <param name="perching_theta" value="0.5"/> -->
+      <param name="perching_theta" value="-1.5708"/>
+      <!-- <param name="perching_theta" value="-3"/> -->
+
+      <param name="replan" value="false"/>
+      <param name="pause_debug" value="true"/>
+
+    </node>
+
+    <node pkg="planning" name="traj_server" type="traj_server" output="screen">
+      <remap from="~odom" to="odom"/>
+      <remap from="~position_cmd" to="position_cmd"/>
+      <remap from="~trajectory" to="trajectory"/>
+    </node>
+
+  </group>
+</launch>
