@@ -10,7 +10,6 @@
 #include "nav_msgs/Odometry.h"
 #include "nav_msgs/Path.h"
 #include "pose_utils.h"
-#include "quadrotor_msgs/PositionCommand.h"
 #include "ros/ros.h"
 #include "sensor_msgs/Range.h"
 #include "tf/transform_broadcaster.h"
@@ -509,52 +508,6 @@ void odom_callback(const nav_msgs::Odometry::ConstPtr& msg) {
   }
 }
 
-void cmd_callback(const quadrotor_msgs::PositionCommand cmd) {
-  if (cmd.header.frame_id == string("null"))
-    return;
-
-  colvec pose(6);
-  pose(0) = cmd.position.x;
-  pose(1) = cmd.position.y;
-  pose(2) = cmd.position.z;
-  colvec q(4);
-  q(0) = 1.0;
-  q(1) = 0.0;
-  q(2) = 0.0;
-  q(3) = 0.0;
-  pose.rows(3, 5) = R_to_ypr(quaternion_to_R(q));
-
-  // Mesh model
-  meshROS.header.frame_id = _frame_id;
-  meshROS.header.stamp = cmd.header.stamp;
-  meshROS.ns = "mesh";
-  meshROS.id = 0;
-  meshROS.type = visualization_msgs::Marker::MESH_RESOURCE;
-  meshROS.action = visualization_msgs::Marker::ADD;
-  meshROS.pose.position.x = cmd.position.x;
-  meshROS.pose.position.y = cmd.position.y;
-  meshROS.pose.position.z = cmd.position.z;
-
-  if (cross_config) {
-    colvec ypr = R_to_ypr(quaternion_to_R(q));
-    ypr(0) += 45.0 * PI / 180.0;
-    q = R_to_quaternion(ypr_to_R(ypr));
-  }
-  meshROS.pose.orientation.w = q(0);
-  meshROS.pose.orientation.x = q(1);
-  meshROS.pose.orientation.y = q(2);
-  meshROS.pose.orientation.z = q(3);
-  meshROS.scale.x = 1.0;
-  meshROS.scale.y = 1.0;
-  meshROS.scale.z = 1.0;
-  meshROS.color.a = color_a;
-  meshROS.color.r = color_r;
-  meshROS.color.g = color_g;
-  meshROS.color.b = color_b;
-  meshROS.mesh_resource = mesh_resource;
-  meshPub.publish(meshROS);
-}
-
 int main(int argc, char** argv) {
   ros::init(argc, argv, "odom_visualization");
   ros::NodeHandle n("~");
@@ -578,7 +531,6 @@ int main(int argc, char** argv) {
   n.param("covariance_color", cov_color, false);
 
   ros::Subscriber sub_odom = n.subscribe("odom", 100, odom_callback);
-  ros::Subscriber sub_cmd = n.subscribe("cmd", 100, cmd_callback);
   posePub = n.advertise<geometry_msgs::PoseStamped>("pose", 100, true);
   pathPub = n.advertise<nav_msgs::Path>("path", 100, true);
   velPub = n.advertise<visualization_msgs::Marker>("velocity", 100, true);
