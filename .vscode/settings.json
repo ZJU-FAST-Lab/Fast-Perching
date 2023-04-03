@@ -1,4 +1,10 @@
 {
   "editor.formatOnSave": false,
-  "C_Cpp.clang_format_style": "{ BasedOnStyle: Google, IndentWidth: 2, ColumnLimit: 0}"
+  "C_Cpp.clang_format_style": "{ BasedOnStyle: Google, IndentWidth: 2, ColumnLimit: 0}",
+  "python.autoComplete.extraPaths": [
+    "/opt/ros/noetic/lib/python3/dist-packages"
+  ],
+  "python.analysis.extraPaths": [
+    "/opt/ros/noetic/lib/python3/dist-packages"
+  ]
 }

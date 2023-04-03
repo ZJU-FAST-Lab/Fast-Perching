@@ -73,14 +73,8 @@
       <!-- <param name="perching_theta" value="-3"/> -->
 
       <param name="replan" value="false"/>
-      <param name="pause_debug" value="true"/>
+      <param name="pause_debug" value="false"/>
 
-    </node>
-
-    <node pkg="planning" name="traj_server" type="traj_server" output="screen">
-      <remap from="~odom" to="odom"/>
-      <remap from="~position_cmd" to="position_cmd"/>
-      <remap from="~trajectory" to="trajectory"/>
     </node>
 
   </group>
